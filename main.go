@@ -27,7 +27,6 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func kixartNike(w http.ResponseWriter, r *http.Request) {
 	c := colly.NewCollector()
-
 	var items []item
 
 	c.OnHTML("a[class=pr_productItem]", func(element *colly.HTMLElement) {
