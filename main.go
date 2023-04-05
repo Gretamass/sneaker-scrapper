@@ -10,9 +10,8 @@ import (
 )
 
 type item struct {
-	Name   string `json:"name"`
-	Price  string `json:"price"`
-	ImgUrl string `json:"imgUrl"`
+	Name  string `json:"name"`
+	Price string `json:"price"`
 }
 
 func main() {
@@ -31,9 +30,8 @@ func kixartNike(w http.ResponseWriter, r *http.Request) {
 
 	c.OnHTML("a[class=pr_productItem]", func(element *colly.HTMLElement) {
 		item := item{
-			Name:   element.ChildText("div.bottom div.title"),
-			Price:  element.ChildText("div.bottom div.price"),
-			ImgUrl: element.ChildAttr("div.productTop img.mainPic", "src"),
+			Name:  element.ChildText("div.bottom div.title"),
+			Price: element.ChildText("div.bottom div.price"),
 		}
 		items = append(items, item)
 	})
