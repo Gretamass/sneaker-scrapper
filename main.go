@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 )
 
 type item struct {
@@ -16,33 +17,57 @@ type item struct {
 }
 
 func main() {
-	http.HandleFunc("/", homePage)
-	// KIXART
-	http.HandleFunc("/kixart/nike", kixartNike)
-	http.HandleFunc("/kixart/adidas", kixartAdidas)
-	http.HandleFunc("/kixart/puma", kixartPuma)
-	http.HandleFunc("/kixart/converse", kixartConverse)
-	http.HandleFunc("/kixart/air-jordan", kixartAirJordan)
-	http.HandleFunc("/kixart/new-balance", kixartNewBalance)
-	http.HandleFunc("/kixart/reebok", kixartReebok)
+	// run automatedScrapers once immediately
+	automatedScrapers()
 
-	// BALLZY
-	http.HandleFunc("/ballzy/nike", ballzyNike)
-	http.HandleFunc("/ballzy/converse", ballzyConverse)
-
-	http.HandleFunc("/sizeer/nike", sizeerNike)
-	http.HandleFunc("/sil/nike", silNike)
-	http.HandleFunc("/snkrs/nike", snkrsNike)
-
+	// run automatedScrapers every 6 hours
+	ticker := time.NewTicker(6 * time.Hour)
+	for range ticker.C {
+		automatedScrapers()
+	}
 	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Homepage Endpoint Hit")
+func manualScrapers() {
+	// KIXART
+	//http.HandleFunc("/kixart/nike", kixartNike)
+	//http.HandleFunc("/kixart/adidas", kixartAdidas)
+	//http.HandleFunc("/kixart/puma", kixartPuma)
+	//http.HandleFunc("/kixart/converse", kixartConverse)
+	//http.HandleFunc("/kixart/air-jordan", kixartAirJordan)
+	//http.HandleFunc("/kixart/new-balance", kixartNewBalance)
+	//http.HandleFunc("/kixart/reebok", kixartReebok)
+	//
+	//// BALLZY
+	//http.HandleFunc("/ballzy/nike", ballzyNike)
+	//http.HandleFunc("/ballzy/converse", ballzyConverse)
+	//
+	//http.HandleFunc("/sizeer/nike", sizeerNike)
+	//http.HandleFunc("/sil/nike", silNike)
+	//http.HandleFunc("/snkrs/nike", snkrsNike)
+}
+
+func automatedScrapers() {
+	kixartNike()
+	kixartAdidas()
+	kixartPuma()
+	kixartConverse()
+	kixartAirJordan()
+	kixartNewBalance()
+	kixartReebok()
+
+	ballzyNike()
+	ballzyConverse()
+
+	sizeerNike()
+
+	silNike()
+
+	snkrsNike()
 }
 
 // KIXART
-func kixartNike(w http.ResponseWriter, r *http.Request) {
+func kixartNike() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -78,13 +103,9 @@ func kixartNike(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartNikeProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func kixartAdidas(w http.ResponseWriter, r *http.Request) {
+func kixartAdidas() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -120,13 +141,9 @@ func kixartAdidas(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartAdidasProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func kixartPuma(w http.ResponseWriter, r *http.Request) {
+func kixartPuma() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -162,13 +179,9 @@ func kixartPuma(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartPumaProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func kixartConverse(w http.ResponseWriter, r *http.Request) {
+func kixartConverse() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -204,13 +217,9 @@ func kixartConverse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartConverseProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func kixartAirJordan(w http.ResponseWriter, r *http.Request) {
+func kixartAirJordan() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -246,13 +255,9 @@ func kixartAirJordan(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartAirJordanProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func kixartNewBalance(w http.ResponseWriter, r *http.Request) {
+func kixartNewBalance() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -288,13 +293,9 @@ func kixartNewBalance(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartNewBalanceProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func kixartReebok(w http.ResponseWriter, r *http.Request) {
+func kixartReebok() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -330,14 +331,10 @@ func kixartReebok(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("KixartReebokProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
 // BALLZY
-func ballzyNike(w http.ResponseWriter, r *http.Request) {
+func ballzyNike() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -373,13 +370,9 @@ func ballzyNike(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("BallzyNikeProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
-func ballzyConverse(w http.ResponseWriter, r *http.Request) {
+func ballzyConverse() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -415,14 +408,10 @@ func ballzyConverse(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("BallzyConverseProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
 // Sizeer
-func sizeerNike(w http.ResponseWriter, r *http.Request) {
+func sizeerNike() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -458,14 +447,10 @@ func sizeerNike(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("SizeerNikeProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
 // SIL
-func silNike(w http.ResponseWriter, r *http.Request) {
+func silNike() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -506,14 +491,10 @@ func silNike(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("SilNikeProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
 
 // SNKRS
-func snkrsNike(w http.ResponseWriter, r *http.Request) {
+func snkrsNike() {
 	c := colly.NewCollector()
 	var items []item
 
@@ -554,8 +535,4 @@ func snkrsNike(w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = os.WriteFile("SnkrsNikeProducts.json", content, 0644)
-	if err != nil {
-		fmt.Fprintf(w, "Error writing file: ")
-	}
-	json.NewEncoder(w).Encode(content[0])
 }
